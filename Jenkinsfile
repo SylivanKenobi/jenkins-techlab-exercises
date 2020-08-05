@@ -8,7 +8,6 @@ pipeline {
     }
     environment {
       GREETINGS_TO = 'Jenkins Techlab'
-        PATH+MAVEN = '/path/to/maven'
     }
     stages {
         stage('Greeting') {
