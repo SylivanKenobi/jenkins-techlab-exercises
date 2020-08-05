@@ -1,15 +1,23 @@
 pipeline {
-    agent any
+    agent any // with hosted env use agent { label env.JOB_NAME.split('/')[0] }
     options {
         buildDiscarder(logRotator(numToKeepStr: '5'))
         timeout(time: 10, unit: 'MINUTES')
-        timestamps()  // Timestamper Plugin
-        disableConcurrentBuilds()
+        timestamps()  // Requires the "Timestamper Plugin"
+    }
+    tools {
+        jdk 'jdk8'
+        maven 'maven35'
     }
     stages {
-        stage('Greeting') {
+        stage('Build') {
             steps {
-                echo 'Hello, World!'
+
+                sh 'java -version'
+
+                sh 'javac -version'
+
+                sh 'mvn --version'
             }
         }
     }
