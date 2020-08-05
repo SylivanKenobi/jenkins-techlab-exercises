@@ -12,6 +12,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
+                sh 'echo hi'
                 sh 'mvn -B -V -U -e clean verify -Dsurefire.useFile=false'
                 archiveArtifacts 'target/*.?ar'
                 junit 'target/**/*.xml'  // Requires JUnit plugin
