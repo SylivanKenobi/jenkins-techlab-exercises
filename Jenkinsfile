@@ -5,9 +5,6 @@ pipeline {
         timeout(time: 10, unit: 'MINUTES')
         timestamps()  // Requires the "Timestamper Plugin"
     }
-    environment {
-        NVM_HOME = tool('nvm')
-    }
     tools {
         jdk 'jdk8'
         maven 'maven35'
@@ -15,16 +12,9 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh """#!/bin/bash +x
-                source \${HOME}/.nvm/nvm.sh
-                nvm
-                """
-
-                sh 'java -version'
-
-                sh 'javac -version'
-
-                sh 'mvn --version'
+                sh 'mvn -B -V -U -e clean verify -Dsurefire.useFile=false'
+                archiveArtifacts 'target/*.?ar'
+                junit 'target/**/*.xml'  // Requires JUnit plugin
             }
         }
     }
