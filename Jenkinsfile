@@ -15,7 +15,10 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'nvm -v'
+                sh """#!/bin/bash +x
+                source \${HOME}/.nvm/nvm.sh
+                nvm
+                """
 
                 sh 'java -version'
 
