@@ -1,24 +1,12 @@
 pipeline {
     agent any
+    parameters {
+        string(name: 'company_parameter', defaultValue: 'puzzle', description: 'The company the pipeline runs in')
+    }
     stages {
         stage('Build') {
             steps {
-                script {
-                    def company = 'puzzle'
-                    echo 'join the ${company}'
-                    echo "join the ${company}"
-                    echo '''join the ${company}'''
-                    echo """join the ${company}"""
-
-                    echo "tabulation>\t<"
-                    echo "backspace>\b<"
-                    echo "newline>\n<"
-                    echo "carriage return>\r<"
-                    echo "form feed>\f<"
-                    echo "backslash>\\<"
-                    echo "single quote>\'<"
-                    echo "double quote>\"<"
-                }
+                sh "echo \"Running ${env.BUILD_ID} on ${env.JENKINS_URL} in company ${params.company_parameter}\""
             }
         }
     }
