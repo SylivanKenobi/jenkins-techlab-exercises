@@ -5,6 +5,9 @@ pipeline {
         timeout(time: 10, unit: 'MINUTES')
         timestamps()  // Requires the "Timestamper Plugin"
     }
+    environment {
+        NVM_HOME = tool('nvm')
+    }
     tools {
         jdk 'jdk8'
         maven 'maven35'
@@ -12,6 +15,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
+                sh 'nvm -v'
 
                 sh 'java -version'
 
