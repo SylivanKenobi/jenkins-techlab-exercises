@@ -14,14 +14,30 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'echo hi'
-                sh 'mvn -B -V -U -e clean verify -Dsurefire.useFile=false'
-                archiveArtifacts 'target/*.?ar'
+                milestone(10)  // The first milestone step starts tracking concurrent build order
+                sh 'mvn -B -V -U -e clean verify -DskipTests'
+            }
+        }
+        stage('Test') {
+            steps {
+                // Only one build is allowed to use test resources, newest builds run first
+                lock(resource: 'myResource', inversePrecedence: true) {  // Lockable Resources Plugin
+                    sh 'mvn -B -V -U -e verify -Dsurefire.useFile=false'
+                    milestone(20)  // Abort all older builds that didn't get here
+                }
             }
             post {
-              always {
-                junit 'target/**/*.xml'  // Requires JUnit plugin
+                always {
+                    archiveArtifacts 'target/*.?ar'
+                    junit 'target/**/*.xml'  // JUnit Plugin
                 }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                input "Deploy?"
+                milestone(30)  // Abort all older builds that didn't get here
+                echo 'Deploy'
             }
         }
     }
